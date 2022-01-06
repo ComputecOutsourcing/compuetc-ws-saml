@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>co.experian.computec.config</groupId>
+		<artifactId>computec-ejb-jar</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<groupId>co.experian.computec.saml</groupId>
+	<artifactId>WSSAML</artifactId>
+	<version>1.2</version>
+	<packaging>war</packaging>
+
+	<name>Computec WS SAML Descriptor</name>
+	<description>
+             POM de configuracion para librerias en proyectos WS SAML
+       </description>
+
+
+
+	<dependencies>
+
+
+
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-dom</artifactId>
+			<version>1.2.12</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>1.2.12</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>1.2.12</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.jaxrs</groupId>
+			<artifactId>jaxrs</artifactId>
+			<version>1.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.wink</groupId>
+			<artifactId>ibm-wink-jaxrs</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.webdav</groupId>
+			<artifactId>wink-jaxrs-webdav</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.slf4j</groupId> -->
+<!-- 			<artifactId>slf4j-jdk14</artifactId> -->
+<!-- 			<version>1.0-IBM</version> -->
+<!-- 		</dependency> -->
+
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.slf4j</groupId> -->
+<!-- 			<artifactId>jcl-over-slf4j</artifactId> -->
+<!-- 			<version>1.0-IBM</version> -->
+<!-- 		</dependency> -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>1.0-IBM</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>1.0-IBM</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.3</version>
+		</dependency>
+
+
+	</dependencies>
+
+
+
+	<build>
+		<finalName>${artifactId}-${version}
+             </finalName>
+		<outputDirectory>
+                    src/main/webapp/WEB-INF/classes
+             </outputDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+
+				<configuration>
+					<dependentWarExcludes>
+						scripts/menu.js,WEB-INF/*.txt,WEB-INF/jboss-web.xml,WEB-INF/web.xml
+					</dependentWarExcludes>
+					<archiveClasses>false</archiveClasses>
+					<warSourceDirectory>
+						src/main/webapp
+					</warSourceDirectory>
+					<warSourceExcludes>
+						**/*.mex,WEB-INF/*.tld,WEB-INF/classes/**
+					</warSourceExcludes>
+
+					<archive>
+						<manifest>
+							<addClasspath>false</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+						<addMavenDescriptor>true</addMavenDescriptor>
+					</archive>
+
+				</configuration>
+			</plugin>
+
+
+
+
+		</plugins>
+	</build>
+
+</project>

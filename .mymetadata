@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="computec-ws-saml"
+  id="myeclipse.1334942528680"
+  context-root="/TestPost"
+  j2ee-spec="5.0"
+  archive="computec-ws-saml.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

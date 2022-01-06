@@ -1,0 +1,174 @@
+package co.experian.computec.sts;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+
+import org.apache.axiom.om.util.Base64;
+
+import co.experian.computec.sts.model.ComputecSTSDTO;
+
+public class ComputecSTS {
+
+	private static final String USUARIO_NO_VALIDO = "Usuario no válido";
+
+	private static final String RECURSOS_PROPERTIES = "recursos.properties";
+
+	private final static Logger LOGGER = Logger.getLogger(ComputecSTS.class
+			.getName());
+
+	@SuppressWarnings("unchecked")
+	public String obtenerToken(ComputecSTSDTO valores) throws Exception {
+
+		InputStream stream = null;
+		InitialContext cx = null;
+		try {
+
+			Properties props = new Properties();
+			stream = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(RECURSOS_PROPERTIES);
+			props.load(stream);
+
+			if (!(props.containsValue(valores.getUser())
+					&& props.containsValue(valores.getPassword()))) {
+				throw new Exception(USUARIO_NO_VALIDO);
+			}
+
+			// String hostSTS = props.getProperty("hostSTS");
+			// String client_policy = props.getProperty("client_policy");
+			// String policy = props.getProperty("policy");
+			// String jks = props.getProperty("client_jks");
+
+			long timeIni = System.currentTimeMillis();
+
+			// ConfigurationContext ctx = ComputecSTSConfig.loadConfiguration();
+			// createConfigurationContextFromFileSystem(repo, null);
+
+			long timeFin = System.currentTimeMillis();
+
+			LOGGER.info("tiempo ctx: " + (timeFin - timeIni));
+
+			timeIni = System.currentTimeMillis();
+
+			// STSClient stsClient = new STSClient(ctx);
+
+			// stsClient.setRstTemplate(getRSTTemplate());
+			// String action = TrustUtil.getActionValue(
+			// RahasConstants.VERSION_05_02,
+			// RahasConstants.RST_ACTION_ISSUE);
+			// stsClient.setAction(action);
+
+			timeFin = System.currentTimeMillis();
+
+			LOGGER.info("tiempo conf: " + (timeFin - timeIni));
+
+			timeIni = System.currentTimeMillis();
+
+			SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+
+			String responseToken = new BigInteger(130, sr).toString(32);
+			StringBuilder sb = new StringBuilder(responseToken);
+			sb.append("+");
+			DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			sb.append(format.format(GregorianCalendar.getInstance().getTime()));
+
+			// Token responseToken = stsClient.requestSecurityToken(
+			// loadPolicy(client_policy), hostSTS,
+			// loadPolicy(policy, jks, valores), null);
+
+			timeFin = System.currentTimeMillis();
+
+			LOGGER.info("tiempo inv: " + (timeFin - timeIni));
+
+			cx = new InitialContext();
+			Map<String, Object> map = null;
+			try {
+				map = (Map<String, Object>) cx.lookup(responseToken);
+				map.put(responseToken, sb.toString());
+				// map.put(responseToken + "policy",
+				// getPolicyAsString(policy, jks, valores));
+				cx.rebind(responseToken, map);
+			} catch (NameNotFoundException e) {
+				map = new HashMap<String, Object>();
+				map.put(responseToken, sb.toString());
+				// map.put(responseToken.getId() + "policy",
+				// getPolicyAsString(policy, jks, valores));
+				cx.rebind(responseToken, map);
+			}
+
+			String objSerializado = serializarBase64(responseToken);
+
+			return objSerializado;
+
+		} catch (Exception e) {
+			LOGGER.log(
+					Level.SEVERE,
+					"exception in ComputecSTS - validate token "
+							+ e.getLocalizedMessage(), e.getCause());
+			throw new Exception(e.getMessage());
+		} finally {
+			try {
+				if (stream != null) {
+					stream.close();
+				}
+				cx.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				LOGGER.log(Level.SEVERE,
+						"exception in ComputecSTS " + e.getLocalizedMessage(),
+						e);
+			}
+		}
+
+	}
+
+	private static String serializarBase64(Object objeto) throws Exception {
+
+		ByteArrayOutputStream baos = null;
+		ObjectOutputStream oout = null;
+		try {
+			String objetoSerializado = null;
+
+			baos = new ByteArrayOutputStream();
+			oout = new ObjectOutputStream(baos);
+			oout.writeObject(objeto);
+
+			byte[] buf = baos.toByteArray();
+			objetoSerializado = Base64.encode(buf);
+
+			return objetoSerializado;
+		} catch (Exception e) {
+
+			LOGGER.log(
+					Level.SEVERE,
+					"exception in ComputecSTS - validate token "
+							+ e.getLocalizedMessage(), e.getCause());
+			throw new Exception(e.getMessage());
+		} finally {
+			try {
+				baos.close();
+				oout.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				LOGGER.log(Level.SEVERE,
+						"exception in ComputecSTS " + e.getLocalizedMessage(),
+						e);
+			}
+		}
+	}
+
+}

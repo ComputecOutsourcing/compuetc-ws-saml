@@ -1,0 +1,4 @@
+#Tue Apr 24 11:59:55 COT 2012
+blue.framework.id=com.genuitec.eclipse.ws.blue.jaxws
+blue.target.server=websphere7Server\#AppSrv01
+eclipse.preferences.version=1
